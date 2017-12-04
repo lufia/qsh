@@ -10,6 +10,9 @@ package main
 %type<tree> WORD
 %%
 stmt:
+	{
+		return 1
+	}
 |	line '\n'
 
 line:
@@ -38,9 +41,6 @@ simple:
 
 word:
 	comword
-	{
-		$$ = $1
-	}
 
 comword:
 	WORD
