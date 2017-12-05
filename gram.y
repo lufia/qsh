@@ -18,6 +18,9 @@ stmt:
 		return 1
 	}
 |	line '\n'
+	{
+		ast.Dump($1)
+	}
 
 line:
 	cmd
@@ -38,10 +41,16 @@ cmd:
 		$$ = nil
 	}
 |	simple
+	{
+		$$ = ast.Simple($1)
+	}
 
 simple:
 	word
 |	simple word
+	{
+		$$ = ast.New(ast.LIST, $1, $2)
+	}
 
 word:
 	comword

@@ -41,7 +41,7 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	default:
 		l.buf.WriteRune(c)
 		lval.tree = &ast.Node{
-			Type: WORD,
+			Type: ast.WORD,
 			Str:  l.scanText(),
 		}
 		return WORD

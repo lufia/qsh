@@ -1,7 +1,7 @@
 TARG=qsh
 
 YACC=$(GOPATH)/bin/goyacc
-GOFILES=$(wildcard *.go)
+GOFILES=$(wildcard *.go */*.go)
 
 .PHONY: all clean
 
