@@ -6,6 +6,8 @@ import (
 	"log"
 	"text/scanner"
 	"unicode"
+
+	"github.com/lufia/qsh/ast"
 )
 
 type Lexer struct {
@@ -38,9 +40,9 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		return int(c)
 	default:
 		l.buf.WriteRune(c)
-		lval.tree = &Tree{
-			typ: WORD,
-			str: l.scanText(),
+		lval.tree = &ast.Node{
+			Type: WORD,
+			Str:  l.scanText(),
 		}
 		return WORD
 	}

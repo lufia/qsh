@@ -3,11 +3,13 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"github.com/lufia/qsh/ast"
 )
 
 type Token struct {
 	Type int
-	tree *Tree
+	tree *ast.Node
 }
 
 func TestLexWords(t *testing.T) {
@@ -18,9 +20,9 @@ func TestLexWords(t *testing.T) {
 		{
 			Source: "a bc d\n",
 			Wants: []*Token{
-				&Token{Type: WORD, tree: &Tree{str: "a"}},
-				&Token{Type: WORD, tree: &Tree{str: "bc"}},
-				&Token{Type: WORD, tree: &Tree{str: "d"}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "bc"}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "d"}},
 				&Token{Type: '\n'},
 			},
 		},
@@ -46,8 +48,8 @@ func TestLexWords(t *testing.T) {
 						t.Errorf("tree = %v; want nil", s.tree)
 					}
 				} else {
-					if s.tree.str != want.tree.str {
-						t.Errorf("str = %q; want %q", s.tree.str, want.tree.str)
+					if s.tree.Str != want.tree.Str {
+						t.Errorf("str = %q; want %q", s.tree.Str, want.tree.Str)
 					}
 				}
 			}
