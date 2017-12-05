@@ -38,20 +38,38 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		return -1
 	case '\n':
 		return int(c)
+	case '\'':
+		lval.tree = ast.Token(l.scanQuotedText())
+		lval.tree.Quoted = true
+		return WORD
 	default:
 		l.buf.WriteRune(c)
-		lval.tree = &ast.Node{
-			Type: ast.WORD,
-			Str:  l.scanText(),
-		}
+		lval.tree = ast.Token(l.scanText())
 		return WORD
 	}
+}
+
+func (l *Lexer) scanQuotedText() string {
+	for {
+		c := l.s.Next()
+		if c == scanner.EOF {
+			break
+		}
+		if c == '\'' {
+			if l.s.Peek() != '\'' {
+				break
+			}
+			l.s.Next()
+		}
+		l.buf.WriteRune(c)
+	}
+	return l.buf.String()
 }
 
 func (l *Lexer) scanText() string {
 	for {
 		c := l.s.Peek()
-		if c == scanner.EOF || unicode.IsSpace(c) {
+		if c == scanner.EOF || unicode.IsSpace(c) || c == '\'' {
 			break
 		}
 		l.buf.WriteRune(l.s.Next())

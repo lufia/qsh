@@ -10,10 +10,11 @@ const (
 )
 
 type Node struct {
-	Type  LexType
-	Str   string
-	Left  *Node
-	Right *Node
+	Type   LexType
+	Str    string
+	Quoted bool
+	Left   *Node
+	Right  *Node
 }
 
 func (n *Node) String() string {
@@ -30,6 +31,13 @@ func New(t LexType, p1, p2 *Node) *Node {
 		Type:  t,
 		Left:  p1,
 		Right: p2,
+	}
+}
+
+func Token(s string) *Node {
+	return &Node{
+		Type: WORD,
+		Str:  s,
 	}
 }
 
