@@ -1,13 +1,17 @@
 TARG=qsh
 
+YACC=$(GOPATH)/bin/goyacc
 GOFILES=$(wildcard *.go)
 
 .PHONY: all clean
 
-all: $(TARG)
+all: $(YACC) $(TARG)
 
 qsh: y.go $(GOFILES)
 	go build
+
+$(YACC):
+	go get -u golang.org/x/tools/cmd/goyacc
 
 y.go: gram.y
 	goyacc $<
