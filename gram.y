@@ -4,6 +4,7 @@ package main
 
 import (
 	"github.com/lufia/qsh/ast"
+	"github.com/lufia/qsh/cgen"
 )
 %}
 %union{
@@ -20,6 +21,7 @@ stmt:
 |	line '\n'
 	{
 		ast.Dump($1)
+		cgen.Compile($1)
 		return 0
 	}
 
