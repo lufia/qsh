@@ -20,6 +20,7 @@ stmt:
 |	line '\n'
 	{
 		ast.Dump($1)
+		return 0
 	}
 
 line:
