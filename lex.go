@@ -4,37 +4,57 @@ import (
 	"bytes"
 	"io"
 	"log"
-	"text/scanner"
 	"unicode"
 
 	"github.com/lufia/qsh/ast"
 )
 
+const (
+	EOF = -1
+)
+
 type Lexer struct {
-	s        scanner.Scanner
+	s        io.RuneScanner
+	err      error
 	filename string
 	lineno   int
 	buf      bytes.Buffer
 }
 
-func (l *Lexer) Init(r io.Reader, filename string) {
-	l.filename = filename
-	l.s.Error = func(s *scanner.Scanner, msg string) {
-		l.Error(msg)
+func (l *Lexer) getc() rune {
+	if l.err != nil {
+		return EOF
 	}
-	l.s.Init(r)
+	var c rune
+	c, _, l.err = l.s.ReadRune()
+	if l.err != nil {
+		return EOF
+	}
+	return c
+}
+
+func (l *Lexer) ungetc() {
+	if l.err != nil {
+		return
+	}
+	l.err = l.s.UnreadRune()
+}
+
+func (l *Lexer) Init(s io.RuneScanner, filename string) {
+	l.s = s
+	l.filename = filename
 }
 
 func (l *Lexer) Lex(lval *yySymType) int {
 	l.buf.Reset()
 	lval.tree = nil
 
-	c := l.s.Next()
+	c := l.getc()
 	for isSpace(c) {
-		c = l.s.Next()
+		c = l.getc()
 	}
 	switch c {
-	case scanner.EOF:
+	case EOF:
 		return -1
 	case '\n':
 		return int(c)
@@ -51,15 +71,15 @@ func (l *Lexer) Lex(lval *yySymType) int {
 
 func (l *Lexer) scanQuotedText() string {
 	for {
-		c := l.s.Next()
-		if c == scanner.EOF {
+		c := l.getc()
+		if c == EOF {
 			break
 		}
 		if c == '\'' {
-			if l.s.Peek() != '\'' {
+			if c1 := l.getc(); c1 != '\'' {
+				l.ungetc()
 				break
 			}
-			l.s.Next()
 		}
 		l.buf.WriteRune(c)
 	}
@@ -68,11 +88,12 @@ func (l *Lexer) scanQuotedText() string {
 
 func (l *Lexer) scanText() string {
 	for {
-		c := l.s.Peek()
-		if c == scanner.EOF || unicode.IsSpace(c) || c == '\'' {
+		c := l.getc()
+		if c == EOF || unicode.IsSpace(c) || c == '\'' {
+			l.ungetc()
 			break
 		}
-		l.buf.WriteRune(l.s.Next())
+		l.buf.WriteRune(c)
 	}
 	return l.buf.String()
 }
