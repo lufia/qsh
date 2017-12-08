@@ -7,6 +7,7 @@ const (
 	WORD LexType = iota
 	SIMPLE
 	LIST
+	VAR
 )
 
 type Node struct {
@@ -44,4 +45,8 @@ func Token(s string) *Node {
 func Simple(p *Node) *Node {
 	n := New(SIMPLE, p, nil)
 	return n
+}
+
+func Var(p *Node) *Node {
+	return New(VAR, p, nil)
 }

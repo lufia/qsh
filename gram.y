@@ -59,4 +59,8 @@ word:
 	comword
 
 comword:
-	WORD
+	'$' word
+	{
+		$$ = ast.Var($2)
+	}
+|	WORD

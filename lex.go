@@ -56,6 +56,8 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	switch c {
 	case EOF:
 		return -1
+	case '$':
+		return int(c)
 	case '\n':
 		return int(c)
 	case '\'':
