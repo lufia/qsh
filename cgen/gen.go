@@ -13,12 +13,14 @@ type Cmd struct {
 
 func Simple(cmd *Cmd) {
 	fmt.Println(cmd.words)
+	cmd.pc++
 }
 
 type String string
 
 func (s String) Push(cmd *Cmd) {
 	cmd.words = append(cmd.words, string(s))
+	cmd.pc++
 }
 
 type Code struct {
@@ -45,7 +47,6 @@ func Compile(p *ast.Node) error {
 	var cmd Cmd
 	for cmd.pc < len(c.steps) {
 		c.steps[cmd.pc](&cmd)
-		cmd.pc++
 	}
 	return nil
 }
