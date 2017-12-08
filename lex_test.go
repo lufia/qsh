@@ -56,6 +56,15 @@ func TestLexWords(t *testing.T) {
 				&Token{Type: '\n'},
 			},
 		},
+		{
+			Source: "a=1\n",
+			Wants: []*Token{
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: '='},
+				&Token{Type: WORD, tree: &ast.Node{Str: "1"}},
+				&Token{Type: '\n'},
+			},
+		},
 	}
 	for _, v := range tab {
 		var l Lexer

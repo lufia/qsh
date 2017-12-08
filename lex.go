@@ -56,6 +56,8 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	switch c {
 	case EOF:
 		return -1
+	case '=':
+		return int(c)
 	case '$':
 		return int(c)
 	case '\n':
@@ -91,13 +93,21 @@ func (l *Lexer) scanQuotedText() string {
 func (l *Lexer) scanText() string {
 	for {
 		c := l.getc()
-		if c == EOF || unicode.IsSpace(c) || c == '\'' {
+		if c == EOF || unicode.IsSpace(c) || isDelim(c) {
 			l.ungetc()
 			break
 		}
 		l.buf.WriteRune(c)
 	}
 	return l.buf.String()
+}
+
+func isDelim(c rune) bool {
+	switch c {
+	case '=', '\'':
+		return true
+	}
+	return false
 }
 
 func isSpace(c rune) bool {

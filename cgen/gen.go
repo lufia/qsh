@@ -24,13 +24,22 @@ func (s String) Push(cmd *Cmd) {
 }
 
 var (
-	vtab = map[string]string{"name": "test"}
+	vtab = make(map[string]string)
 )
 
 func Var(cmd *Cmd) {
 	n := len(cmd.words)
 	name := cmd.words[n-1]
 	cmd.words[n-1] = vtab[name]
+	cmd.pc++
+}
+
+func Assign(cmd *Cmd) {
+	n := len(cmd.words)
+	name := cmd.words[n-1]
+	value := cmd.words[n-2]
+	vtab[name] = value
+	cmd.words = cmd.words[0 : n-2]
 	cmd.pc++
 }
 
@@ -55,6 +64,14 @@ Variable:
 op:mark
 op:word("name")
 op:var
+
+Assign:
+
+op:mark
+op:word("value")
+op:mark
+op:word("name")
+op:assign
 */
 
 func Compile(p *ast.Node) error {
@@ -79,6 +96,10 @@ func walk(c *Code, p *ast.Node) error {
 	case ast.VAR:
 		walk(c, p.Left)
 		c.emit(Var)
+	case ast.ASSIGN:
+		walk(c, p.Right)
+		walk(c, p.Left)
+		c.emit(Assign)
 	case ast.LIST:
 		walk(c, p.Left)
 		walk(c, p.Right)

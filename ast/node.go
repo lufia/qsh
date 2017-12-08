@@ -8,6 +8,7 @@ const (
 	SIMPLE
 	LIST
 	VAR
+	ASSIGN
 )
 
 type Node struct {

@@ -10,8 +10,8 @@ import (
 %union{
 	tree *ast.Node
 }
-%type<tree> line cmdsa
-%type<tree> cmd simple word comword
+%type<tree> line cmdsa assign
+%type<tree> cmd simple first word comword
 %type<tree> WORD
 %%
 stmt:
@@ -39,6 +39,12 @@ cmdsan:
 |	cmd '\n'
 */
 
+assign:
+	first '=' word
+	{
+		$$ = ast.New(ast.ASSIGN, $1, $3)
+	}
+
 cmd:
 	{
 		$$ = nil
@@ -47,6 +53,7 @@ cmd:
 	{
 		$$ = ast.Simple($1)
 	}
+|	assign
 
 simple:
 	word
@@ -54,6 +61,9 @@ simple:
 	{
 		$$ = ast.New(ast.LIST, $1, $2)
 	}
+
+first:
+	comword
 
 word:
 	comword
