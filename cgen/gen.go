@@ -1,8 +1,6 @@
 package cgen
 
 import (
-	"fmt"
-
 	"github.com/lufia/qsh/ast"
 )
 
