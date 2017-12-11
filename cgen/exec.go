@@ -6,7 +6,7 @@ type Cmd struct {
 }
 
 var (
-	vtab = make(map[string]string)
+	vtab = make(map[string][]string)
 )
 
 type String string
@@ -24,7 +24,12 @@ func Simple(cmd *Cmd) {
 func Var(cmd *Cmd) {
 	n := len(cmd.words)
 	name := cmd.words[n-1]
-	cmd.words[n-1] = vtab[name]
+	v := vtab[name]
+	if len(v) != 1 {
+		// TODO: variable name is not singleton
+		return
+	}
+	cmd.words[n-1] = v[0]
 	cmd.pc++
 }
 
@@ -32,7 +37,7 @@ func Assign(cmd *Cmd) {
 	n := len(cmd.words)
 	name := cmd.words[n-1]
 	value := cmd.words[n-2]
-	vtab[name] = value
+	vtab[name] = []string{value}
 	cmd.words = cmd.words[0 : n-2]
 	cmd.pc++
 }
