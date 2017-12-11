@@ -127,5 +127,6 @@ func isSpace(c rune) bool {
 }
 
 func (l *Lexer) Error(msg string) {
-	log.Printf("%s:%d: %s\n", l.filename, l.lineno, msg)
+	s := l.buf.String()
+	log.Printf("%s:%d: %s near %q\n", l.filename, l.lineno, msg, s)
 }

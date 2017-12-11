@@ -105,5 +105,9 @@ words:
 	}
 |	words word
 	{
-		$$ = ast.New(ast.LIST, $1, $2)
+		if $1 == nil {
+			$$ = $2
+		} else {
+			$$ = ast.New(ast.LIST, $1, $2)
+		}
 	}

@@ -2,6 +2,7 @@ package cgen
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -127,7 +128,7 @@ func resolvePath(p string) (string, error) {
 			return f, nil
 		}
 	}
-	return "", errors.New("command not found")
+	return "", fmt.Errorf("%s: command not found", p)
 }
 
 func Var(cmd *Cmd) {
