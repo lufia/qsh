@@ -36,10 +36,7 @@ func Compile(p *ast.Node) error {
 	var c Code
 	walk(&c, p)
 
-	var cmd Cmd
-	for cmd.pc < len(c.steps) {
-		c.steps[cmd.pc](&cmd)
-	}
+	Start(&c)
 	return nil
 }
 

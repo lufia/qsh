@@ -2,19 +2,42 @@ package cgen
 
 import (
 	"errors"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 )
 
-type Cmd struct {
-	pc    int
-	words []string
-}
-
 var (
 	vtab = make(map[string][]string)
+	runq *Cmd
 )
+
+type Cmd struct {
+	code  *Code
+	pc    int
+	words []string
+	ret   *Cmd
+}
+
+func Start(code *Code) {
+	runq = &Cmd{
+		code: code,
+		ret:  runq,
+	}
+	for runq != nil && runq.pc < len(runq.code.steps) {
+		code.steps[runq.pc](runq)
+	}
+	Return()
+}
+
+func Return() {
+	runq = runq.ret
+}
+
+func Error(err error) {
+	log.Println(err)
+}
 
 type String string
 
@@ -30,7 +53,8 @@ func Simple(cmd *Cmd) {
 		var err error
 		p, err = resolvePath(p)
 		if err != nil {
-			return // TODO: catch an error
+			Error(err)
+			return
 		}
 	}
 	c := exec.Command(p, cmd.words[1:]...)
@@ -38,7 +62,8 @@ func Simple(cmd *Cmd) {
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
 	if err := c.Run(); err != nil {
-		// TODO
+		Error(err)
+		return
 	}
 }
 
@@ -62,7 +87,7 @@ func Var(cmd *Cmd) {
 	name := cmd.words[n-1]
 	v := vtab[name]
 	if len(v) != 1 {
-		// TODO: variable name is not singleton
+		Error(errors.New("variable name is not singleton"))
 		return
 	}
 	cmd.words[n-1] = v[0]
