@@ -4,9 +4,9 @@ package ast
 
 import "strconv"
 
-const _LexType_name = "WORDSIMPLELISTVARASSIGN"
+const _LexType_name = "WORDSIMPLELISTBLOCKASYNCVARASSIGNIF"
 
-var _LexType_index = [...]uint8{0, 4, 10, 14, 17, 23}
+var _LexType_index = [...]uint8{0, 4, 10, 14, 19, 24, 27, 33, 35}
 
 func (i LexType) String() string {
 	if i < 0 || i >= LexType(len(_LexType_index)-1) {

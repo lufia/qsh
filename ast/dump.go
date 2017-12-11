@@ -27,10 +27,22 @@ func dump1(p *Node, w io.Writer, indent int) {
 		dump1(p.Left, w, indent+2)
 		fmt.Fprintf(w, "%*sRight:\n", indent+1, "")
 		dump1(p.Right, w, indent+2)
+	case BLOCK:
+		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
+		dump1(p.Left, w, indent+2)
+	case ASYNC:
+		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
+		dump1(p.Left, w, indent+2)
 	case VAR:
 		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
 		dump1(p.Left, w, indent+2)
 	case ASSIGN:
+		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
+		fmt.Fprintf(w, "%*sLeft:\n", indent+1, "")
+		dump1(p.Left, w, indent+2)
+		fmt.Fprintf(w, "%*sRight:\n", indent+1, "")
+		dump1(p.Right, w, indent+2)
+	case IF:
 		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
 		fmt.Fprintf(w, "%*sLeft:\n", indent+1, "")
 		dump1(p.Left, w, indent+2)

@@ -65,6 +65,29 @@ func TestLexWords(t *testing.T) {
 				&Token{Type: '\n'},
 			},
 		},
+		{
+			Source: "{a;b}&",
+			Wants: []*Token{
+				&Token{Type: '{'},
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: ';'},
+				&Token{Type: WORD, tree: &ast.Node{Str: "b"}},
+				&Token{Type: '}'},
+				&Token{Type: '&'},
+			},
+		},
+		{
+			Source: "if{a}{b}",
+			Wants: []*Token{
+				&Token{Type: IF},
+				&Token{Type: '{'},
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: '}'},
+				&Token{Type: '{'},
+				&Token{Type: WORD, tree: &ast.Node{Str: "b"}},
+				&Token{Type: '}'},
+			},
+		},
 	}
 	for _, v := range tab {
 		var l Lexer

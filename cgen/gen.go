@@ -22,14 +22,50 @@ Assign:
 	op:mark
 	op:word("name")
 	op:assign
+
+If statement:
+	op:word("ls")
+	op:simple
+	op:if
+	op:int(&END)
+	op:word("pwd")
+	op:simple
+	op:wasTrue
+	op:END
 */
 
 type Code struct {
 	steps []func(cmd *Cmd)
 }
 
+// Pos returns next position.
+func (c *Code) Pos() int {
+	return len(c.steps)
+}
+
 func (c *Code) emit(f func(cmd *Cmd)) {
 	c.steps = append(c.steps, f)
+}
+
+func (c *Code) alloc() *addr {
+	pos := c.Pos()
+	c.steps = append(c.steps, c.nop)
+	return &addr{
+		code: c,
+		slot: pos,
+	}
+}
+
+func (*Code) nop(*Cmd) {
+}
+
+type addr struct {
+	code *Code
+	slot int
+}
+
+func (a *addr) Set(f func(cmd *Cmd)) {
+	a.code.steps[a.slot] = f
 }
 
 func Compile(p *ast.Node) error {
@@ -54,6 +90,11 @@ func walk(c *Code, p *ast.Node) error {
 	case ast.LIST:
 		walk(c, p.Left)
 		walk(c, p.Right)
+	case ast.BLOCK:
+		walk(c, p.Left)
+	case ast.ASYNC:
+		// TODO: func do not fork.
+		walk(c, p.Left)
 	case ast.VAR:
 		walk(c, p.Left)
 		c.emit(Var)
@@ -61,6 +102,13 @@ func walk(c *Code, p *ast.Node) error {
 		walk(c, p.Right)
 		walk(c, p.Left)
 		c.emit(Assign)
+	case ast.IF:
+		walk(c, p.Left)
+		c.emit(If)
+		op := c.alloc()
+		walk(c, p.Right)
+		label := Label(c.Pos())
+		op.Set(label.Jump)
 	}
 	return nil
 }

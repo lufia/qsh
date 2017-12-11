@@ -26,9 +26,16 @@ func Start(code *Code) {
 		ret:  runq,
 	}
 	for runq != nil && runq.pc < len(runq.code.steps) {
-		code.steps[runq.pc](runq)
+		runq.pc++
+		code.steps[runq.pc-1](runq)
 	}
 	Return()
+}
+
+type Label int
+
+func (t Label) Jump(cmd *Cmd) {
+	cmd.pc = int(t)
 }
 
 func Return() {
@@ -43,11 +50,9 @@ type String string
 
 func (s String) Push(cmd *Cmd) {
 	cmd.words = append(cmd.words, string(s))
-	cmd.pc++
 }
 
 func Simple(cmd *Cmd) {
-	cmd.pc++
 	p := cmd.words[0]
 	if !filepath.IsAbs(p) {
 		var err error
@@ -91,7 +96,6 @@ func Var(cmd *Cmd) {
 		return
 	}
 	cmd.words[n-1] = v[0]
-	cmd.pc++
 }
 
 func Assign(cmd *Cmd) {
@@ -100,5 +104,7 @@ func Assign(cmd *Cmd) {
 	value := cmd.words[n-2]
 	vtab[name] = []string{value}
 	cmd.words = cmd.words[0 : n-2]
-	cmd.pc++
+}
+
+func If(cmd *Cmd) {
 }

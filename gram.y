@@ -1,4 +1,6 @@
+%term IF
 %term WORD
+%left IF
 %{
 package main
 
@@ -10,7 +12,7 @@ import (
 %union{
 	tree *ast.Node
 }
-%type<tree> line cmdsa assign
+%type<tree> line block body cmdsa cmdsan assign
 %type<tree> cmd simple first word comword
 %type<tree> WORD
 %%
@@ -29,15 +31,29 @@ line:
 	cmd
 |	cmdsa line
 
+body:
+	cmd
+|	cmdsan body
+	{
+		$$ = ast.New(ast.LIST, $1, $2)
+	}
+
 cmdsa:
 	cmd ';'
 |	cmd '&'
+	{
+		$$ = ast.Async($1)
+	}
 
-/*
 cmdsan:
 	cmdsa
 |	cmd '\n'
-*/
+
+block:
+	'{' body '}'
+	{
+		$$ = ast.Block($2)
+	}
 
 assign:
 	first '=' word
@@ -48,6 +64,10 @@ assign:
 cmd:
 	{
 		$$ = nil
+	}
+|	IF block block
+	{
+		$$ = ast.New(ast.IF, $2, $3)
 	}
 |	simple
 	{

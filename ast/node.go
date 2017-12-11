@@ -7,8 +7,11 @@ const (
 	WORD LexType = iota
 	SIMPLE
 	LIST
+	BLOCK
+	ASYNC
 	VAR
 	ASSIGN
+	IF
 )
 
 type Node struct {
@@ -46,6 +49,14 @@ func Token(s string) *Node {
 func Simple(p *Node) *Node {
 	n := New(SIMPLE, p, nil)
 	return n
+}
+
+func Block(p *Node) *Node {
+	return New(BLOCK, p, nil)
+}
+
+func Async(p *Node) *Node {
+	return New(ASYNC, p, nil)
 }
 
 func Var(p *Node) *Node {

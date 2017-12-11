@@ -13,6 +13,10 @@ const (
 	EOF = -1
 )
 
+var keywords = map[string]int{
+	"if": IF,
+}
+
 type Lexer struct {
 	s        io.RuneScanner
 	err      error
@@ -43,6 +47,7 @@ func (l *Lexer) ungetc() {
 func (l *Lexer) Init(s io.RuneScanner, filename string) {
 	l.s = s
 	l.filename = filename
+	l.lineno = 1
 }
 
 func (l *Lexer) Lex(lval *yySymType) int {
@@ -56,11 +61,10 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	switch c {
 	case EOF:
 		return -1
-	case '=':
-		return int(c)
-	case '$':
+	case '=', '&', ';', '$', '{', '}':
 		return int(c)
 	case '\n':
+		l.lineno++
 		return int(c)
 	case '\'':
 		lval.tree = ast.Token(l.scanQuotedText())
@@ -68,7 +72,11 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		return WORD
 	default:
 		l.buf.WriteRune(c)
-		lval.tree = ast.Token(l.scanText())
+		s := l.scanText()
+		if k, ok := keywords[s]; ok {
+			return k
+		}
+		lval.tree = ast.Token(s)
 		return WORD
 	}
 }
@@ -104,7 +112,7 @@ func (l *Lexer) scanText() string {
 
 func isDelim(c rune) bool {
 	switch c {
-	case '=', '\'':
+	case '=', '&', ';', '$', '{', '}', '\'':
 		return true
 	}
 	return false
