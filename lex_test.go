@@ -99,6 +99,18 @@ func TestLexWords(t *testing.T) {
 				&Token{Type: '}'},
 			},
 		},
+		{
+			Source: "for i in a{x}",
+			Wants: []*Token{
+				&Token{Type: FOR},
+				&Token{Type: WORD, tree: &ast.Node{Str: "i"}},
+				&Token{Type: IN},
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: '{'},
+				&Token{Type: WORD, tree: &ast.Node{Str: "x"}},
+				&Token{Type: '}'},
+			},
+		},
 	}
 	for _, v := range tab {
 		var l Lexer

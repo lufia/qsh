@@ -32,13 +32,28 @@ Assign(tuple):
 	op:assign
 
 If statement:
+	op:mark
 	op:word("ls")
 	op:simple
 	op:if
 	op:goto(&END)
+	op:mark
 	op:word("pwd")
 	op:simple
 	op:wasTrue
+	op:END
+
+For statement:
+	op:mark
+	op:word("a")
+	op:word("b")
+	op:mark
+	op:word("i")
+	op:for
+	op:goto(&END)
+	op:word("ls")
+	op:simple
+	op:jump(&for)
 	op:END
 */
 
@@ -121,6 +136,18 @@ func walk(c *Code, p *ast.Node) error {
 		c.emit(If)
 		op := c.alloc()
 		walk(c, p.Right)
+		g := Goto(c.Pos())
+		op.Set(g.Jump)
+	case ast.FOR:
+		c.emit(Mark)
+		walk(c, p.Left.Right)
+		c.emit(Mark)
+		walk(c, p.Left.Left)
+		loop := c.Pos()
+		c.emit(For)
+		op := c.alloc()
+		walk(c, p.Right)
+		c.emit(Goto(loop).Jump)
 		g := Goto(c.Pos())
 		op.Set(g.Jump)
 	}

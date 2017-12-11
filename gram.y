@@ -1,6 +1,6 @@
-%term IF
+%term IF FOR IN
 %term WORD
-%left IF
+%left IF FOR
 %{
 package main
 
@@ -68,6 +68,11 @@ cmd:
 |	IF block block
 	{
 		$$ = ast.New(ast.IF, $2, $3)
+	}
+|	FOR word IN words block
+	{
+		p := ast.New(ast.LIST, $2, $4)
+		$$ = ast.New(ast.FOR, p, $5)
 	}
 |	simple
 	{

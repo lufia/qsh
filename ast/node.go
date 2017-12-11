@@ -13,6 +13,7 @@ const (
 	TUPLE
 	ASSIGN
 	IF
+	FOR
 )
 
 type Node struct {

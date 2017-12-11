@@ -166,3 +166,22 @@ func If(cmd *Cmd) {
 		cmd.pc++
 	}
 }
+
+func For(cmd *Cmd) {
+	p := cmd.stack[len(cmd.stack)-2]
+	if len(p.words) == 0 {
+		cmd.popStack()
+		return
+	}
+
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
+		Error(errors.New("variable name is not singleton"))
+		return
+	}
+
+	name := s.words[0]
+	vtab[name] = []string{p.words[0]}
+	p.words = p.words[1:]
+	cmd.pc++ // skip goto op
+}
