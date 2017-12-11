@@ -6,7 +6,7 @@ package main
 
 import (
 	"github.com/lufia/qsh/ast"
-	"github.com/lufia/qsh/cgen"
+	"github.com/lufia/qsh/build"
 )
 %}
 %union{
@@ -23,7 +23,7 @@ stmt:
 |	line '\n'
 	{
 		ast.Dump($1)
-		cgen.Compile($1)
+		build.Compile($1)
 		return 0
 	}
 

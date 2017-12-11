@@ -1,4 +1,4 @@
-package cgen
+package build
 
 import (
 	"errors"

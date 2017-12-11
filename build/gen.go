@@ -1,4 +1,4 @@
-package cgen
+package build
 
 import (
 	"github.com/lufia/qsh/ast"
