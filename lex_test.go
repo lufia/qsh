@@ -66,6 +66,17 @@ func TestLexWords(t *testing.T) {
 			},
 		},
 		{
+			Source: "a=(1 2)",
+			Wants: []*Token{
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: '='},
+				&Token{Type: '('},
+				&Token{Type: WORD, tree: &ast.Node{Str: "1"}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "2"}},
+				&Token{Type: ')'},
+			},
+		},
+		{
 			Source: "{a;b}&",
 			Wants: []*Token{
 				&Token{Type: '{'},

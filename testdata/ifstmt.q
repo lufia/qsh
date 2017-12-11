@@ -1,4 +1,5 @@
-PATH=/usr/bin
+PATH=(/bin /usr/bin)
 if { false } {
 	pwd
 }
+echo result: $status

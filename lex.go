@@ -61,7 +61,7 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	switch c {
 	case EOF:
 		return -1
-	case '=', '&', ';', '$', '{', '}':
+	case '=', '&', ';', '$', '{', '}', '(', ')':
 		return int(c)
 	case '\n':
 		l.lineno++
@@ -112,7 +112,7 @@ func (l *Lexer) scanText() string {
 
 func isDelim(c rune) bool {
 	switch c {
-	case '=', '&', ';', '$', '{', '}', '\'':
+	case '=', '&', ';', '$', '{', '}', '(', ')', '\'':
 		return true
 	}
 	return false

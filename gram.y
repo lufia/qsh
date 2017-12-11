@@ -13,7 +13,7 @@ import (
 	tree *ast.Node
 }
 %type<tree> line block body cmdsa cmdsan assign
-%type<tree> cmd simple first word comword
+%type<tree> cmd simple first word comword words
 %type<tree> WORD
 %%
 stmt:
@@ -93,4 +93,17 @@ comword:
 	{
 		$$ = ast.Var($2)
 	}
+|	'(' words ')'
+	{
+		$$ = ast.Tuple($2)
+	}
 |	WORD
+
+words:
+	{
+		$$ = nil
+	}
+|	words word
+	{
+		$$ = ast.New(ast.LIST, $1, $2)
+	}

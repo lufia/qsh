@@ -16,9 +16,17 @@ Variable:
 	op:word("name")
 	op:var
 
-Assign:
+Assign(single):
 	op:mark
 	op:word("value")
+	op:mark
+	op:word("name")
+	op:assign
+
+Assign(tuple):
+	op:mark
+	op:word("arg1")
+	op:word("arg2")
 	op:mark
 	op:word("name")
 	op:assign
@@ -100,6 +108,8 @@ func walk(c *Code, p *ast.Node) error {
 		c.emit(Mark)
 		walk(c, p.Left)
 		c.emit(Var)
+	case ast.TUPLE:
+		walk(c, p.Left)
 	case ast.ASSIGN:
 		c.emit(Mark)
 		walk(c, p.Right)

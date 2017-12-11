@@ -36,6 +36,9 @@ func dump1(p *Node, w io.Writer, indent int) {
 	case VAR:
 		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
 		dump1(p.Left, w, indent+2)
+	case TUPLE:
+		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
+		dump1(p.Left, w, indent+2)
 	case ASSIGN:
 		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
 		fmt.Fprintf(w, "%*sLeft:\n", indent+1, "")

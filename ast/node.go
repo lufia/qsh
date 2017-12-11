@@ -10,6 +10,7 @@ const (
 	BLOCK
 	ASYNC
 	VAR
+	TUPLE
 	ASSIGN
 	IF
 )
@@ -61,4 +62,8 @@ func Async(p *Node) *Node {
 
 func Var(p *Node) *Node {
 	return New(VAR, p, nil)
+}
+
+func Tuple(p *Node) *Node {
+	return New(TUPLE, p, nil)
 }
