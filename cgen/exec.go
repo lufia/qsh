@@ -13,11 +13,48 @@ var (
 	runq *Cmd
 )
 
+func lastStatus() string {
+	v, ok := vtab["status"]
+	if !ok || len(v) != 1 {
+		return ""
+	}
+	return v[0]
+}
+
+func isSuccess() bool {
+	return lastStatus() == ""
+}
+
+func updateStatus(err error) {
+	if err == nil {
+		delete(vtab, "status")
+	} else {
+		vtab["status"] = []string{err.Error()}
+	}
+}
+
+type Stack struct {
+	words []string
+}
+
 type Cmd struct {
 	code  *Code
 	pc    int
-	words []string
+	stack []*Stack
 	ret   *Cmd
+}
+
+func Mark(cmd *Cmd) {
+	var s Stack
+	cmd.stack = append(cmd.stack, &s)
+}
+
+func (cmd *Cmd) currentStack() *Stack {
+	return cmd.stack[len(cmd.stack)-1]
+}
+
+func (cmd *Cmd) popStack() {
+	cmd.stack = cmd.stack[0 : len(cmd.stack)-1]
 }
 
 func Start(code *Code) {
@@ -32,10 +69,10 @@ func Start(code *Code) {
 	Return()
 }
 
-type Label int
+type Goto int
 
-func (t Label) Jump(cmd *Cmd) {
-	cmd.pc = int(t)
+func (g Goto) Jump(cmd *Cmd) {
+	cmd.pc = int(g)
 }
 
 func Return() {
@@ -49,11 +86,15 @@ func Error(err error) {
 type String string
 
 func (s String) Push(cmd *Cmd) {
-	cmd.words = append(cmd.words, string(s))
+	p := cmd.currentStack()
+	p.words = append(p.words, string(s))
 }
 
 func Simple(cmd *Cmd) {
-	p := cmd.words[0]
+	defer cmd.popStack()
+
+	s := cmd.currentStack()
+	p := s.words[0]
 	if !filepath.IsAbs(p) {
 		var err error
 		p, err = resolvePath(p)
@@ -62,14 +103,16 @@ func Simple(cmd *Cmd) {
 			return
 		}
 	}
-	c := exec.Command(p, cmd.words[1:]...)
+	c := exec.Command(p, s.words[1:]...)
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
 	if err := c.Run(); err != nil {
-		Error(err)
+		updateStatus(err)
 		return
 	}
+	updateStatus(nil)
+	return
 }
 
 func resolvePath(p string) (string, error) {
@@ -88,23 +131,37 @@ func resolvePath(p string) (string, error) {
 }
 
 func Var(cmd *Cmd) {
-	n := len(cmd.words)
-	name := cmd.words[n-1]
-	v := vtab[name]
-	if len(v) != 1 {
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
 		Error(errors.New("variable name is not singleton"))
 		return
 	}
-	cmd.words[n-1] = v[0]
+	v := vtab[s.words[0]]
+	cmd.popStack()
+	s1 := cmd.currentStack()
+	s1.words = append(s1.words, v...)
 }
 
 func Assign(cmd *Cmd) {
-	n := len(cmd.words)
-	name := cmd.words[n-1]
-	value := cmd.words[n-2]
-	vtab[name] = []string{value}
-	cmd.words = cmd.words[0 : n-2]
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
+		Error(errors.New("variable name is not singleton"))
+		return
+	}
+	cmd.popStack()
+	name := s.words[0]
+
+	s = cmd.currentStack()
+	if len(s.words) == 0 {
+		delete(vtab, name)
+	} else {
+		vtab[name] = s.words
+	}
+	cmd.popStack()
 }
 
 func If(cmd *Cmd) {
+	if isSuccess() {
+		cmd.pc++
+	}
 }

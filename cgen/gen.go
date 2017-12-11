@@ -27,7 +27,7 @@ If statement:
 	op:word("ls")
 	op:simple
 	op:if
-	op:int(&END)
+	op:goto(&END)
 	op:word("pwd")
 	op:simple
 	op:wasTrue
@@ -85,6 +85,7 @@ func walk(c *Code, p *ast.Node) error {
 		s := String(p.Str)
 		c.emit(s.Push)
 	case ast.SIMPLE:
+		c.emit(Mark)
 		walk(c, p.Left)
 		c.emit(Simple)
 	case ast.LIST:
@@ -96,10 +97,13 @@ func walk(c *Code, p *ast.Node) error {
 		// TODO: func do not fork.
 		walk(c, p.Left)
 	case ast.VAR:
+		c.emit(Mark)
 		walk(c, p.Left)
 		c.emit(Var)
 	case ast.ASSIGN:
+		c.emit(Mark)
 		walk(c, p.Right)
+		c.emit(Mark)
 		walk(c, p.Left)
 		c.emit(Assign)
 	case ast.IF:
@@ -107,8 +111,8 @@ func walk(c *Code, p *ast.Node) error {
 		c.emit(If)
 		op := c.alloc()
 		walk(c, p.Right)
-		label := Label(c.Pos())
-		op.Set(label.Jump)
+		g := Goto(c.Pos())
+		op.Set(g.Jump)
 	}
 	return nil
 }
