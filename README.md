@@ -24,6 +24,8 @@ a=1     # scalar; same as a=(1)
 a=(1 2) # array
 
 echo $a
+# Output:
+# 1 2
 ```
 
 Indirect reference
@@ -58,6 +60,14 @@ for i in 1 2 3 {
 # 1
 # 2
 # 3
+```
+
+### Expression
+
+```
+true && echo true
+
+false || echo false
 ```
 
 ### Redirection

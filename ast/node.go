@@ -18,6 +18,8 @@ const (
 	ASSIGN
 	IF
 	FOR
+	ANDAND
+	OROR
 )
 
 const (

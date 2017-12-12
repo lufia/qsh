@@ -63,6 +63,28 @@ For statement:
 	op:simple
 	op:jump(&for)
 	op:END
+
+And operator:
+	op:mark
+	op:word("a")
+	op:simple
+	op:true
+	op:goto(&END)
+	op:mark
+	op:word("b")
+	op:simple
+	op:END
+
+Or operator:
+	op:mark
+	op:word("a")
+	op:simple
+	op:false
+	op:goto(&END)
+	op:mark
+	op:word("b")
+	op:simple
+	op:END
 */
 
 type Code struct {
@@ -169,6 +191,20 @@ func walk(c *Code, p *ast.Node) error {
 		op := c.alloc()
 		walk(c, p.Right)
 		c.emit(Goto(loop).Jump)
+		g := Goto(c.Pos())
+		op.Set(g.Jump)
+	case ast.ANDAND:
+		walk(c, p.Left)
+		c.emit(ContinueIf)
+		op := c.alloc()
+		walk(c, p.Right)
+		g := Goto(c.Pos())
+		op.Set(g.Jump)
+	case ast.OROR:
+		walk(c, p.Left)
+		c.emit(ContinueUnless)
+		op := c.alloc()
+		walk(c, p.Right)
 		g := Goto(c.Pos())
 		op.Set(g.Jump)
 	}

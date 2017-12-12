@@ -307,3 +307,15 @@ func For(cmd *Cmd) {
 	p.words = p.words[1:]
 	cmd.pc++ // skip goto op
 }
+
+func ContinueIf(cmd *Cmd) {
+	if isSuccess() {
+		cmd.pc++
+	}
+}
+
+func ContinueUnless(cmd *Cmd) {
+	if !isSuccess() {
+		cmd.pc++
+	}
+}

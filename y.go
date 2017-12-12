@@ -1,15 +1,15 @@
-//line gram.y:5
+//line gram.y:6
 package main
 
 import __yyfmt__ "fmt"
 
-//line gram.y:5
+//line gram.y:6
 import (
 	"github.com/lufia/qsh/ast"
 	"github.com/lufia/qsh/build"
 )
 
-//line gram.y:12
+//line gram.y:13
 type yySymType struct {
 	yys  int
 	tree *ast.Node
@@ -20,6 +20,8 @@ const FOR = 57347
 const IN = 57348
 const WORD = 57349
 const REDIR = 57350
+const ANDAND = 57351
+const OROR = 57352
 
 var yyToknames = [...]string{
 	"$end",
@@ -30,6 +32,8 @@ var yyToknames = [...]string{
 	"IN",
 	"WORD",
 	"REDIR",
+	"ANDAND",
+	"OROR",
 	"'\\n'",
 	"';'",
 	"'&'",
@@ -58,78 +62,81 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 65
+const yyLast = 80
 
 var yyAct = [...]int{
 
-	18, 21, 10, 27, 3, 37, 10, 4, 29, 25,
-	38, 19, 20, 22, 13, 24, 33, 26, 14, 28,
-	13, 10, 11, 12, 30, 19, 13, 32, 11, 12,
-	34, 35, 1, 10, 11, 12, 30, 41, 9, 32,
-	40, 13, 42, 5, 6, 7, 13, 15, 16, 11,
-	12, 36, 23, 8, 11, 12, 39, 15, 16, 2,
-	31, 0, 0, 0, 17,
+	20, 23, 10, 29, 33, 41, 10, 3, 4, 27,
+	42, 21, 22, 24, 14, 37, 1, 28, 9, 10,
+	10, 32, 2, 10, 7, 30, 31, 19, 25, 34,
+	36, 8, 38, 39, 35, 5, 6, 10, 13, 0,
+	44, 45, 13, 34, 36, 0, 46, 0, 11, 12,
+	13, 0, 11, 12, 40, 13, 26, 21, 13, 0,
+	11, 12, 0, 0, 0, 11, 12, 0, 11, 12,
+	17, 18, 43, 15, 16, 17, 18, 0, 15, 16,
 }
 var yyPact = [...]int{
 
-	39, -1000, 9, 37, 39, -1, 19, 7, -1000, -5,
-	-1000, 19, -1000, -1000, -1000, -1000, -1000, -1000, -1, 39,
-	10, -1000, -1000, -1000, 19, 19, -1000, 34, -1000, -3,
-	47, 39, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
-	-1000, 13, -1000,
+	31, -1000, 3, 66, 31, -3, 51, 48, -1000, -7,
+	-1000, 51, -1000, -1000, -1000, -1000, -1000, 31, 31, -1000,
+	-3, 31, 9, -1000, -1000, -1000, 51, 51, -1000, 35,
+	-1000, -1000, -1000, -5, 61, 31, -1000, -1000, -1000, -1000,
+	-1000, -1000, -1000, -1000, -1000, 43, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 59, 0, 8, 7, 60, 53, 52, 4, 45,
-	38, 5, 1, 3, 32,
+	0, 22, 0, 4, 8, 34, 31, 28, 7, 24,
+	18, 5, 1, 3, 16,
 }
 var yyR1 = [...]int{
 
 	0, 14, 14, 1, 1, 3, 3, 4, 4, 5,
-	5, 2, 6, 8, 8, 8, 8, 8, 9, 9,
-	9, 7, 10, 11, 12, 12, 12, 13, 13,
+	5, 2, 6, 8, 8, 8, 8, 8, 8, 8,
+	9, 9, 9, 7, 10, 11, 12, 12, 12, 13,
+	13,
 }
 var yyR2 = [...]int{
 
 	0, 0, 2, 1, 2, 1, 2, 2, 2, 1,
-	2, 3, 3, 0, 3, 5, 1, 1, 1, 2,
-	2, 2, 1, 1, 2, 3, 1, 0, 2,
+	2, 3, 3, 0, 3, 5, 1, 3, 3, 1,
+	1, 2, 2, 2, 1, 1, 2, 3, 1, 0,
+	2,
 }
 var yyChk = [...]int{
 
 	-1000, -14, -1, -8, -4, 4, 5, -9, -6, -10,
-	-12, 15, 16, 7, 9, 10, 11, -1, -2, 12,
-	-11, -12, -11, -7, 8, 14, -11, -13, -2, -3,
-	-8, -5, -4, 6, -11, -11, 17, -11, 13, 9,
-	-3, -13, -2,
+	-12, 17, 18, 7, 11, 12, 13, 9, 10, -1,
+	-2, 14, -11, -12, -11, -7, 8, 16, -11, -13,
+	-8, -8, -2, -3, -8, -5, -4, 6, -11, -11,
+	19, -11, 15, 11, -3, -13, -2,
 }
 var yyDef = [...]int{
 
-	-2, -2, 0, 3, 13, 0, 0, 16, 17, 18,
-	22, 0, 27, 26, 2, 7, 8, 4, 0, 13,
-	0, 23, 19, 20, 0, 0, 24, 0, 14, 0,
-	5, 13, 9, 27, 21, 12, 25, 28, 11, 10,
-	6, 0, 15,
+	-2, -2, 0, 3, 13, 0, 0, 16, 19, 20,
+	24, 0, 29, 28, 2, 7, 8, 13, 13, 4,
+	0, 13, 0, 25, 21, 22, 0, 0, 26, 0,
+	17, 18, 14, 0, 5, 13, 9, 29, 23, 12,
+	27, 30, 11, 10, 6, 0, 15,
 }
 var yyTok1 = [...]int{
 
 	1, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	9, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	11, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 15, 3, 11, 3,
-	16, 17, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 10,
-	3, 14, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 17, 3, 13, 3,
+	18, 19, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 12,
+	3, 16, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 12, 3, 13,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 14, 3, 15,
 }
 var yyTok2 = [...]int{
 
-	2, 3, 4, 5, 6, 7, 8,
+	2, 3, 4, 5, 6, 7, 8, 9, 10,
 }
 var yyTok3 = [...]int{
 	0,
@@ -474,13 +481,13 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:20
+		//line gram.y:21
 		{
 			return 1
 		}
 	case 2:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:24
+		//line gram.y:25
 		{
 			ast.Dump(yyDollar[1].tree)
 			build.Compile(yyDollar[1].tree)
@@ -488,98 +495,110 @@ yydefault:
 		}
 	case 4:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:33
+		//line gram.y:34
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 6:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:40
+		//line gram.y:41
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 8:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:47
+		//line gram.y:48
 		{
 			yyVAL.tree = ast.Async(yyDollar[1].tree)
 		}
 	case 11:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:57
+		//line gram.y:58
 		{
 			yyVAL.tree = ast.Block(yyDollar[2].tree)
 		}
 	case 12:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:63
+		//line gram.y:64
 		{
 			yyVAL.tree = ast.Assign(yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 13:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:68
+		//line gram.y:69
 		{
 			yyVAL.tree = nil
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:72
+		//line gram.y:73
 		{
 			yyVAL.tree = ast.New(ast.IF, yyDollar[2].tree, yyDollar[3].tree)
 		}
 	case 15:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line gram.y:76
+		//line gram.y:77
 		{
 			p := ast.New(ast.LIST, yyDollar[2].tree, yyDollar[4].tree)
 			yyVAL.tree = ast.New(ast.FOR, p, yyDollar[5].tree)
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line gram.y:81
+		//line gram.y:82
 		{
 			yyVAL.tree = ast.Simple(yyDollar[1].tree)
 		}
-	case 19:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:89
+	case 17:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line gram.y:86
 		{
-			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
+			yyVAL.tree = ast.New(ast.ANDAND, yyDollar[1].tree, yyDollar[3].tree)
 		}
-	case 20:
-		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:93
+	case 18:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line gram.y:90
 		{
-			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
+			yyVAL.tree = ast.New(ast.OROR, yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 21:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:99
+		//line gram.y:98
+		{
+			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
+		}
+	case 22:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line gram.y:102
+		{
+			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
+		}
+	case 23:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line gram.y:108
 		{
 			yyVAL.tree = ast.Redirect(yyDollar[1].tree, yyDollar[2].tree)
 		}
-	case 24:
+	case 26:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:111
+		//line gram.y:120
 		{
 			yyVAL.tree = ast.Var(yyDollar[2].tree)
 		}
-	case 25:
+	case 27:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:115
+		//line gram.y:124
 		{
 			yyVAL.tree = ast.Tuple(yyDollar[2].tree)
 		}
-	case 27:
+	case 29:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:121
+		//line gram.y:130
 		{
 			yyVAL.tree = nil
 		}
-	case 28:
+	case 30:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:125
+		//line gram.y:134
 		{
 			if yyDollar[1].tree == nil {
 				yyVAL.tree = yyDollar[2].tree

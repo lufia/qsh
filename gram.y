@@ -1,6 +1,7 @@
 %term IF FOR IN
 %term WORD REDIR
 %left IF FOR
+%left ANDAND OROR
 %{
 package main
 
@@ -80,6 +81,14 @@ cmd:
 |	simple
 	{
 		$$ = ast.Simple($1)
+	}
+|	cmd ANDAND cmd
+	{
+		$$ = ast.New(ast.ANDAND, $1, $3)
+	}
+|	cmd OROR cmd
+	{
+		$$ = ast.New(ast.OROR, $1, $3)
 	}
 |	assign
 

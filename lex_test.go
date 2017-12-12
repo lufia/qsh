@@ -135,6 +135,22 @@ func TestLexWords(t *testing.T) {
 				&Token{Type: WORD, tree: &ast.Node{Str: "c"}},
 			},
 		},
+		{
+			Source: "a && b",
+			Wants: []*Token{
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: ANDAND},
+				&Token{Type: WORD, tree: &ast.Node{Str: "b"}},
+			},
+		},
+		{
+			Source: "a || b",
+			Wants: []*Token{
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: OROR},
+				&Token{Type: WORD, tree: &ast.Node{Str: "b"}},
+			},
+		},
 	}
 	for _, v := range tab {
 		var l Lexer

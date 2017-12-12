@@ -63,5 +63,17 @@ func dump1(p *Node, w io.Writer, indent int) {
 		dump1(p.Left, w, indent+2)
 		fmt.Fprintf(w, "%*sRight:\n", indent+1, "")
 		dump1(p.Right, w, indent+2)
+	case ANDAND:
+		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
+		fmt.Fprintf(w, "%*sLeft:\n", indent+1, "")
+		dump1(p.Left, w, indent+2)
+		fmt.Fprintf(w, "%*sRight:\n", indent+1, "")
+		dump1(p.Right, w, indent+2)
+	case OROR:
+		fmt.Fprintf(w, "%*s%s:\n", indent, "", p.Type)
+		fmt.Fprintf(w, "%*sLeft:\n", indent+1, "")
+		dump1(p.Left, w, indent+2)
+		fmt.Fprintf(w, "%*sRight:\n", indent+1, "")
+		dump1(p.Right, w, indent+2)
 	}
 }
