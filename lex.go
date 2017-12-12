@@ -74,6 +74,18 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		return -1
 	case '=', '&', ';', '$', '{', '}', '(', ')':
 		return int(c)
+	case '<':
+		lval.tree = ast.Redir(ast.READ)
+		return REDIR
+	case '>':
+		c = l.getc()
+		if c == '>' {
+			lval.tree = ast.Redir(ast.APPEND)
+			return REDIR
+		}
+		l.ungetc()
+		lval.tree = ast.Redir(ast.WRITE)
+		return REDIR
 	case '\n':
 		l.lineno++
 		return int(c)
@@ -132,7 +144,7 @@ func (l *Lexer) skipLine() {
 
 func isDelim(c rune) bool {
 	switch c {
-	case '=', '&', ';', '$', '{', '}', '(', ')', '\'':
+	case '=', '&', ';', '$', '{', '}', '(', ')', '<', '>', '\'':
 		return true
 	}
 	return false
