@@ -117,6 +117,24 @@ func TestLexWords(t *testing.T) {
 				&Token{Type: WORD, tree: &ast.Node{Str: "a#b"}},
 			},
 		},
+		{
+			Source: "a<b >c",
+			Wants: []*Token{
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: REDIR, tree: &ast.Node{Dir: ast.READ}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "b"}},
+				&Token{Type: REDIR, tree: &ast.Node{Dir: ast.WRITE}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "c"}},
+			},
+		},
+		{
+			Source: "a>>c",
+			Wants: []*Token{
+				&Token{Type: WORD, tree: &ast.Node{Str: "a"}},
+				&Token{Type: REDIR, tree: &ast.Node{Dir: ast.APPEND}},
+				&Token{Type: WORD, tree: &ast.Node{Str: "c"}},
+			},
+		},
 	}
 	for _, v := range tab {
 		var l Lexer

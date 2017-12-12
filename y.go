@@ -19,6 +19,7 @@ const IF = 57346
 const FOR = 57347
 const IN = 57348
 const WORD = 57349
+const REDIR = 57350
 
 var yyToknames = [...]string{
 	"$end",
@@ -28,6 +29,7 @@ var yyToknames = [...]string{
 	"FOR",
 	"IN",
 	"WORD",
+	"REDIR",
 	"'\\n'",
 	"';'",
 	"'&'",
@@ -52,85 +54,82 @@ var yyExca = [...]int{
 	-1, 1,
 	1, -1,
 	-2, 0,
-	-1, 11,
-	13, 20,
-	-2, 21,
 }
 
 const yyPrivate = 57344
 
-const yyLast = 62
+const yyLast = 65
 
 var yyAct = [...]int{
 
-	9, 19, 26, 3, 24, 22, 11, 21, 23, 14,
-	11, 4, 28, 25, 15, 36, 12, 13, 34, 5,
-	6, 27, 14, 20, 29, 33, 11, 35, 32, 12,
-	13, 14, 31, 1, 29, 39, 11, 10, 12, 13,
-	35, 40, 31, 38, 14, 16, 17, 7, 20, 8,
-	30, 12, 13, 37, 16, 17, 2, 0, 0, 0,
-	0, 18,
+	18, 21, 10, 27, 3, 37, 10, 4, 29, 25,
+	38, 19, 20, 22, 13, 24, 33, 26, 14, 28,
+	13, 10, 11, 12, 30, 19, 13, 32, 11, 12,
+	34, 35, 1, 10, 11, 12, 30, 41, 9, 32,
+	40, 13, 42, 5, 6, 7, 13, 15, 16, 11,
+	12, 36, 23, 8, 11, 12, 39, 15, 16, 2,
+	31, 0, 0, 0, 17,
 }
 var yyPact = [...]int{
 
-	15, -1000, 6, 36, 15, 12, 24, 24, -1000, -1000,
-	-9, -1000, 24, -1000, -1000, -1000, -1000, -1000, -1000, 12,
-	15, 22, -1000, -1000, 24, -1000, 2, -1000, 3, 45,
-	15, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, 37,
-	-1000,
+	39, -1000, 9, 37, 39, -1, 19, 7, -1000, -5,
+	-1000, 19, -1000, -1000, -1000, -1000, -1000, -1000, -1, 39,
+	10, -1000, -1000, -1000, 19, 19, -1000, 34, -1000, -3,
+	47, 39, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
+	-1000, 13, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 56, 1, 12, 11, 50, 49, 3, 47, 37,
-	0, 5, 2, 33,
+	0, 59, 0, 8, 7, 60, 53, 52, 4, 45,
+	38, 5, 1, 3, 32,
 }
 var yyR1 = [...]int{
 
-	0, 13, 13, 1, 1, 3, 3, 4, 4, 5,
-	5, 2, 6, 7, 7, 7, 7, 7, 8, 8,
-	9, 10, 11, 11, 11, 12, 12,
+	0, 14, 14, 1, 1, 3, 3, 4, 4, 5,
+	5, 2, 6, 8, 8, 8, 8, 8, 9, 9,
+	9, 7, 10, 11, 12, 12, 12, 13, 13,
 }
 var yyR2 = [...]int{
 
 	0, 0, 2, 1, 2, 1, 2, 2, 2, 1,
 	2, 3, 3, 0, 3, 5, 1, 1, 1, 2,
-	1, 1, 2, 3, 1, 0, 2,
+	2, 2, 1, 1, 2, 3, 1, 0, 2,
 }
 var yyChk = [...]int{
 
-	-1000, -13, -1, -7, -4, 4, 5, -8, -6, -10,
-	-9, -11, 14, 15, 7, 8, 9, 10, -1, -2,
-	11, -10, -11, -10, 13, -10, -12, -2, -3, -7,
-	-5, -4, 6, -10, 16, -10, 12, 8, -3, -12,
-	-2,
+	-1000, -14, -1, -8, -4, 4, 5, -9, -6, -10,
+	-12, 15, 16, 7, 9, 10, 11, -1, -2, 12,
+	-11, -12, -11, -7, 8, 14, -11, -13, -2, -3,
+	-8, -5, -4, 6, -11, -11, 17, -11, 13, 9,
+	-3, -13, -2,
 }
 var yyDef = [...]int{
 
 	-2, -2, 0, 3, 13, 0, 0, 16, 17, 18,
-	0, -2, 0, 25, 24, 2, 7, 8, 4, 0,
-	13, 0, 21, 19, 0, 22, 0, 14, 0, 5,
-	13, 9, 25, 12, 23, 26, 11, 10, 6, 0,
-	15,
+	22, 0, 27, 26, 2, 7, 8, 4, 0, 13,
+	0, 23, 19, 20, 0, 0, 24, 0, 14, 0,
+	5, 13, 9, 27, 21, 12, 25, 28, 11, 10,
+	6, 0, 15,
 }
 var yyTok1 = [...]int{
 
 	1, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	8, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	9, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 14, 3, 10, 3,
-	15, 16, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 9,
-	3, 13, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 15, 3, 11, 3,
+	16, 17, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 10,
+	3, 14, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 11, 3, 12,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+	3, 3, 3, 12, 3, 13,
 }
 var yyTok2 = [...]int{
 
-	2, 3, 4, 5, 6, 7,
+	2, 3, 4, 5, 6, 7, 8,
 }
 var yyTok3 = [...]int{
 	0,
@@ -487,82 +486,100 @@ yydefault:
 			build.Compile(yyDollar[1].tree)
 			return 0
 		}
+	case 4:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line gram.y:33
+		{
+			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
+		}
 	case 6:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:37
+		//line gram.y:40
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 8:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:44
+		//line gram.y:47
 		{
 			yyVAL.tree = ast.Async(yyDollar[1].tree)
 		}
 	case 11:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:54
+		//line gram.y:57
 		{
 			yyVAL.tree = ast.Block(yyDollar[2].tree)
 		}
 	case 12:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:60
+		//line gram.y:63
 		{
-			yyVAL.tree = ast.New(ast.ASSIGN, yyDollar[1].tree, yyDollar[3].tree)
+			yyVAL.tree = ast.Assign(yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 13:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:65
+		//line gram.y:68
 		{
 			yyVAL.tree = nil
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:69
+		//line gram.y:72
 		{
 			yyVAL.tree = ast.New(ast.IF, yyDollar[2].tree, yyDollar[3].tree)
 		}
 	case 15:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line gram.y:73
+		//line gram.y:76
 		{
 			p := ast.New(ast.LIST, yyDollar[2].tree, yyDollar[4].tree)
 			yyVAL.tree = ast.New(ast.FOR, p, yyDollar[5].tree)
 		}
 	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line gram.y:78
+		//line gram.y:81
 		{
 			yyVAL.tree = ast.Simple(yyDollar[1].tree)
 		}
 	case 19:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:86
+		//line gram.y:89
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
-	case 22:
+	case 20:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:98
+		//line gram.y:93
+		{
+			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
+		}
+	case 21:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line gram.y:99
+		{
+			yyVAL.tree = ast.Redirect(yyDollar[1].tree, yyDollar[2].tree)
+		}
+	case 24:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line gram.y:111
 		{
 			yyVAL.tree = ast.Var(yyDollar[2].tree)
 		}
-	case 23:
+	case 25:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:102
+		//line gram.y:115
 		{
 			yyVAL.tree = ast.Tuple(yyDollar[2].tree)
 		}
-	case 25:
+	case 27:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:108
+		//line gram.y:121
 		{
 			yyVAL.tree = nil
 		}
-	case 26:
+	case 28:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:112
+		//line gram.y:125
 		{
 			if yyDollar[1].tree == nil {
 				yyVAL.tree = yyDollar[2].tree

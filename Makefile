@@ -5,6 +5,7 @@ STRINGER=$(GOPATH)/bin/stringer
 GOFILES=\
 	$(wildcard *.go */*.go)\
 	ast/lextype_string.go\
+	ast/direction_string.go\
 
 .PHONY: all test clean
 
@@ -22,7 +23,7 @@ $(YACC):
 $(STRINGER):
 	go get -u golang.org/x/tools/cmd/stringer
 
-ast/lextype_string.go: ast/node.go $(STRINGER)
+ast/lextype_string.go ast/direction_string.go: ast/node.go $(STRINGER)
 	go generate $<
 
 y.go: gram.y

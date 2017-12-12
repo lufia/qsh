@@ -1,5 +1,5 @@
 %term IF FOR IN
-%term WORD
+%term WORD REDIR
 %left IF FOR
 %{
 package main
@@ -12,9 +12,9 @@ import (
 %union{
 	tree *ast.Node
 }
-%type<tree> line block body cmdsa cmdsan assign
+%type<tree> line block body cmdsa cmdsan assign redir
 %type<tree> cmd simple first word comword words
-%type<tree> WORD
+%type<tree> WORD REDIR
 %%
 stmt:
 	{
@@ -30,6 +30,9 @@ stmt:
 line:
 	cmd
 |	cmdsa line
+	{
+		$$ = ast.New(ast.LIST, $1, $2)
+	}
 
 body:
 	cmd
@@ -58,7 +61,7 @@ block:
 assign:
 	first '=' word
 	{
-		$$ = ast.New(ast.ASSIGN, $1, $3)
+		$$ = ast.Assign($1, $3)
 	}
 
 cmd:
@@ -81,10 +84,20 @@ cmd:
 |	assign
 
 simple:
-	word
+	first
 |	simple word
 	{
 		$$ = ast.New(ast.LIST, $1, $2)
+	}
+|	simple redir
+	{
+		$$ = ast.New(ast.LIST, $1, $2)
+	}
+
+redir:
+	REDIR word
+	{
+		$$ = ast.Redirect($1, $2)
 	}
 
 first:

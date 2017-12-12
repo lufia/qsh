@@ -57,5 +57,9 @@ func dump1(p *Node, w io.Writer, indent int) {
 		dump1(p.Left, w, indent+2)
 		fmt.Fprintf(w, "%*sRight:\n", indent+1, "")
 		dump1(p.Right, w, indent+2)
+	case REDIR:
+		fmt.Fprintf(w, "%*s%s:%v\n", indent, "", p.Type, p.Dir)
+		fmt.Fprintf(w, "%*sLeft:\n", indent+1, "")
+		dump1(p.Left, w, indent+2)
 	}
 }
