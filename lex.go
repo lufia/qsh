@@ -57,7 +57,16 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	lval.tree = nil
 
 	c := l.getc()
-	for isSpace(c) {
+	for {
+		if c == '#' {
+			l.skipLine()
+			l.lineno++
+			c = l.getc()
+			continue
+		}
+		if !isSpace(c) {
+			break
+		}
 		c = l.getc()
 	}
 	switch c {
@@ -110,6 +119,15 @@ func (l *Lexer) scanText() string {
 		l.buf.WriteRune(c)
 	}
 	return l.buf.String()
+}
+
+func (l *Lexer) skipLine() {
+	for {
+		c := l.getc()
+		if c == EOF || c == '\n' {
+			break
+		}
+	}
 }
 
 func isDelim(c rune) bool {

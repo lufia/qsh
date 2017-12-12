@@ -20,8 +20,8 @@ $ make
 Simple declaration.
 
 ```
-a=1		# single value
-a=(1 2)	# array
+a=1     # scalar; same as a=(1)
+a=(1 2) # array
 
 echo $a
 ```
