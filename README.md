@@ -83,6 +83,36 @@ echo hello >>out
 echo hello <in
 ```
 
+## TODO
+
+- [ ] Basic
+	- [x] comments
+	- [x] command execution
+	- [ ] background execution
+	- [ ] inline execution
+	- [ ] glob
+- [ ] Variable
+	- [x] assign
+	- [ ] indexing
+	- [ ] concat
+	- [ ] environment
+- [ ] Redirection
+	- [x] read
+	- [x] write
+	- [x] append
+	- [ ] error
+	- [ ] pipe
+	- [ ] dup
+- [ ] Statements
+	- [x] if
+	- [ ] if-else
+	- [x] for
+	- [ ] switch
+	- [ ] load
+- [x] Expression
+	- [x] `&&`
+	- [x] `||`
+
 ## Advent calendar
 
 * https://blog.zoncoen.net/2015/12/22/cli-toml-processor-with-goyacc/
