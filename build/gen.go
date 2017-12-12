@@ -119,8 +119,12 @@ func walk(c *Code, p *ast.Node) error {
 		c.emit(Mark)
 		walk(c, p.Left)
 		switch p.Dir {
+		case ast.READ:
+			c.emit(SetStdin)
 		case ast.WRITE:
 			c.emit(SetStdout)
+		case ast.APPEND:
+			c.emit(SetStdoutAppend)
 		}
 		walk(c, p.Right)
 		c.emit(RevertRedir)

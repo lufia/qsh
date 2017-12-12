@@ -139,6 +139,26 @@ func (s String) Push(cmd *Cmd) {
 	p.words = append(p.words, string(s))
 }
 
+func SetStdin(cmd *Cmd) {
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
+		Error(errors.New("< requires singleton"))
+		return
+	}
+	cmd.popStack()
+
+	f, err := openFile(s.words[0], os.O_RDONLY, 0)
+	if err != nil {
+		Error(err)
+		return
+	}
+	redir := &Redir{
+		stdin: f,
+		next:  cmd.redir,
+	}
+	cmd.redir = redir
+}
+
 func SetStdout(cmd *Cmd) {
 	s := cmd.currentStack()
 	if len(s.words) != 1 {
@@ -148,6 +168,26 @@ func SetStdout(cmd *Cmd) {
 	cmd.popStack()
 
 	f, err := openFile(s.words[0], os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		Error(err)
+		return
+	}
+	redir := &Redir{
+		stdout: f,
+		next:   cmd.redir,
+	}
+	cmd.redir = redir
+}
+
+func SetStdoutAppend(cmd *Cmd) {
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
+		Error(errors.New(">> requires singleton"))
+		return
+	}
+	cmd.popStack()
+
+	f, err := openFile(s.words[0], os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
 		Error(err)
 		return

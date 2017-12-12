@@ -4,7 +4,7 @@ q shell
 ## INSTALLATION
 
 ```console
-$ make
+$ go get github.com/lufia/qsh
 ```
 
 ## Language
@@ -33,7 +33,9 @@ arch=lib_amd64
 lib_amd64=lib64
 lib_x86=lib
 
-echo $$arch		# echo lib64
+echo $$arch
+# Output:
+# lib64
 ```
 
 ### If statement
@@ -42,6 +44,8 @@ echo $$arch		# echo lib64
 if { true } {
 	echo ok
 }
+# Output:
+# ok
 ```
 
 ### For statement
@@ -50,6 +54,23 @@ if { true } {
 for i in 1 2 3 {
 	echo $i
 }
+# Output:
+# 1
+# 2
+# 3
+```
+
+### Redirection
+
+```
+# output
+echo hello >out
+
+# append
+echo hello >>out
+
+# input
+echo hello <in
 ```
 
 ## Advent calendar
