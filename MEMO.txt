@@ -1,0 +1,46 @@
+$ echo 'PATH=/bin; pwd >o; pwd' | ./qsh 
+LIST:
+ Left:
+  ASSIGN:
+   Left:
+    WORD:"PATH"
+   Right:
+    WORD:"/bin"
+ Right:
+  LIST:
+   Left:
+    SIMPLE:
+     Left:
+      LIST:
+       Left:
+        WORD:"pwd"
+       Right:
+        REDIR:WRITE
+         Left:
+          WORD:"o"
+   Right:
+    SIMPLE:
+     Left:
+      WORD:"pwd"
+----
+LIST:
+ Left:
+  ASSIGN:
+   Left:
+    WORD:"PATH"
+   Right:
+    WORD:"/bin"
+ Right:
+  LIST:
+   Left:
+    REDIR:WRITE
+     Left:
+      WORD:"o"
+     Right:
+      SIMPLE:
+       Left:
+        WORD:"pwd"
+   Right:
+    SIMPLE:
+     Left:
+      WORD:"pwd"

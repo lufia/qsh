@@ -11,6 +11,14 @@ Simple Code:
 	op:word("arg1")
 	op:simple
 
+Redirect:
+	op:mark
+	op:word("ls")
+	op:mark
+	op:word("out")
+	op:stdout
+	op:simple
+
 Variable:
 	op:mark
 	op:word("name")
@@ -107,6 +115,15 @@ func walk(c *Code, p *ast.Node) error {
 	case ast.WORD:
 		s := String(p.Str)
 		c.emit(s.Push)
+	case ast.REDIR:
+		c.emit(Mark)
+		walk(c, p.Left)
+		switch p.Dir {
+		case ast.WRITE:
+			c.emit(SetStdout)
+		}
+		walk(c, p.Right)
+		c.emit(RevertRedir)
 	case ast.SIMPLE:
 		c.emit(Mark)
 		walk(c, p.Left)

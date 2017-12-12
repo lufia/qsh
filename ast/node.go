@@ -8,6 +8,7 @@ type Direction int
 
 const (
 	WORD LexType = iota
+	REDIR
 	SIMPLE
 	LIST
 	BLOCK
@@ -17,7 +18,6 @@ const (
 	ASSIGN
 	IF
 	FOR
-	REDIR
 )
 
 const (
@@ -59,8 +59,16 @@ func Redir(dir Direction) *Node {
 }
 
 func Simple(p *Node) *Node {
-	n := New(SIMPLE, p, nil)
-	return n
+	p = New(SIMPLE, p, nil)
+	for n := p.Left; n.Type == LIST; n = n.Left {
+		if n.Right.Type == REDIR {
+			n.Right.Right = p
+			p.Left = n.Left
+			p = n.Right
+			n.Right = nil
+		}
+	}
+	return p
 }
 
 func Block(p *Node) *Node {

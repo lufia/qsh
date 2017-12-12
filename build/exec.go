@@ -3,6 +3,7 @@ package build
 import (
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -34,11 +35,57 @@ func updateStatus(err error) {
 	}
 }
 
+type file struct {
+	io.ReadWriteCloser
+	opened bool
+}
+
+func openFile(name string, flag int, perm os.FileMode) (*file, error) {
+	f, err := os.OpenFile(name, flag, perm)
+	if err != nil {
+		return nil, err
+	}
+	return &file{ReadWriteCloser: f, opened: true}, nil
+}
+
+func (f *file) Close() error {
+	if f.opened {
+		return f.ReadWriteCloser.Close()
+	}
+	f.opened = false
+	return nil
+}
+
+type Redir struct {
+	stdin  io.ReadCloser
+	stdout io.WriteCloser
+	stderr io.WriteCloser
+	next   *Redir
+}
+
+func NewRedir() *Redir {
+	return &Redir{
+		stdin:  os.Stdin,
+		stdout: os.Stdout,
+		stderr: os.Stderr,
+	}
+}
+
+func (r *Redir) Stdout() io.Writer {
+	for p := r; p != nil; p = p.next {
+		if p.stdout != nil {
+			return p.stdout
+		}
+	}
+	panic("no stdout")
+}
+
 type Stack struct {
 	words []string
 }
 
 type Cmd struct {
+	redir *Redir
 	code  *Code
 	pc    int
 	stack []*Stack
@@ -60,8 +107,9 @@ func (cmd *Cmd) popStack() {
 
 func Start(code *Code) {
 	runq = &Cmd{
-		code: code,
-		ret:  runq,
+		redir: NewRedir(),
+		code:  code,
+		ret:   runq,
 	}
 	for runq != nil && runq.pc < len(runq.code.steps) {
 		runq.pc++
@@ -91,6 +139,40 @@ func (s String) Push(cmd *Cmd) {
 	p.words = append(p.words, string(s))
 }
 
+func SetStdout(cmd *Cmd) {
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
+		Error(errors.New("> requires singleton"))
+		return
+	}
+	cmd.popStack()
+
+	f, err := openFile(s.words[0], os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		Error(err)
+		return
+	}
+	redir := &Redir{
+		stdout: f,
+		next:   cmd.redir,
+	}
+	cmd.redir = redir
+}
+
+func RevertRedir(cmd *Cmd) {
+	r := cmd.redir
+	cmd.redir = r.next
+	if r.stdin != nil {
+		r.stdin.Close()
+	}
+	if r.stdout != nil {
+		r.stdout.Close()
+	}
+	if r.stderr != nil {
+		r.stderr.Close()
+	}
+}
+
 func Simple(cmd *Cmd) {
 	defer cmd.popStack()
 
@@ -105,9 +187,9 @@ func Simple(cmd *Cmd) {
 		}
 	}
 	c := exec.Command(p, s.words[1:]...)
-	c.Stdin = os.Stdin
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
+	c.Stdin = cmd.redir.stdin
+	c.Stdout = cmd.redir.Stdout()
+	c.Stderr = cmd.redir.stderr
 	if err := c.Run(); err != nil {
 		updateStatus(err)
 		return
