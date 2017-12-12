@@ -30,4 +30,4 @@ y.go: gram.y
 	goyacc $<
 
 clean:
-	rm -f $(TARG) y.*
+	rm -f $(TARG) y.output
