@@ -207,6 +207,8 @@ func walk(c *Code, p *ast.Node) error {
 		walk(c, p.Right)
 		g := Goto(c.Pos())
 		op.Set(g.Jump)
+	case ast.PIPE:
+		// TODO(lufia)
 	}
 	return nil
 }
