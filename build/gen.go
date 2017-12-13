@@ -44,12 +44,12 @@ If statement:
 	op:word("ls")
 	op:simple
 	op:if
-	op:goto(&END)
+	op:goto(END)
 	op:mark
 	op:word("pwd")
 	op:simple
 	op:wasTrue
-	op:END
+END:
 
 For statement:
 	op:mark
@@ -58,33 +58,54 @@ For statement:
 	op:mark
 	op:word("i")
 	op:for
-	op:goto(&END)
+	op:goto(END)
 	op:word("ls")
 	op:simple
 	op:jump(&for)
-	op:END
+END:
 
 And operator:
 	op:mark
 	op:word("a")
 	op:simple
 	op:true
-	op:goto(&END)
+	op:goto(END)
 	op:mark
 	op:word("b")
 	op:simple
-	op:END
+END:
 
 Or operator:
 	op:mark
 	op:word("a")
 	op:simple
 	op:false
-	op:goto(&END)
+	op:goto(END)
 	op:mark
 	op:word("b")
 	op:simple
-	op:END
+END:
+
+Pipe operator:
+	op:pipe
+	op:int(fd0)
+	op:int(fd1)
+	op:goto(EXIT)
+	op:goto(END)
+
+	op:mark
+	op:word("ls")
+	op:simple
+	op:exit
+
+EXIT:
+	op:mark
+	op:work("wc")
+	op:simple
+	op:return
+
+END:
+	op:pipewait
 */
 
 type Code struct {
