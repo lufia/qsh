@@ -133,6 +133,10 @@ comword:
 	{
 		$$ = ast.Tuple($2)
 	}
+|	'$' '{' words '}'
+	{
+		$$ = ast.Module($3)
+	}
 |	WORD
 
 words:

@@ -62,6 +62,28 @@ for i in 1 2 3 {
 # 3
 ```
 
+### Modules
+
+```
+ackage main
+
+var SampleModule = map[string]string{
+	"hello": "Hello",
+}
+
+func Hello(args []string) ([]string, error) {
+	return []string{"hello"}, nil
+}
+```
+
+shell
+
+```
+load sample
+
+echo ${hello a b c}
+```
+
 ### Expression
 
 ```

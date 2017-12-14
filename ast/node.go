@@ -22,6 +22,7 @@ const (
 	OROR
 	PIPE
 	LOAD
+	MODULE
 )
 
 const (
@@ -105,4 +106,8 @@ func Redirect(p1, p2 *Node) *Node {
 
 func Load(p *Node) *Node {
 	return New(LOAD, p, nil)
+}
+
+func Module(p *Node) *Node {
+	return New(MODULE, p, nil)
 }

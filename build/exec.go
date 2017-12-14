@@ -13,6 +13,7 @@ import (
 
 var (
 	vtab = make(map[string][]string)
+	mtab = make(map[string]func([]string) ([]string, error))
 	runq *Cmd
 )
 
@@ -354,4 +355,38 @@ func Wait(cmd *Cmd) {
 func Exit(cmd *Cmd) {
 	RevertRedir(cmd)
 	runtime.Goexit()
+}
+
+func Load(cmd *Cmd) {
+	s := cmd.currentStack()
+	if len(s.words) != 1 {
+		Error(errors.New("load name is not singleton"))
+		return
+	}
+	if err := load(s.words[0]); err != nil {
+		Error(err)
+		return
+	}
+}
+
+func Module(cmd *Cmd) {
+	s := cmd.currentStack()
+	cmd.popStack()
+	if len(s.words) == 0 {
+		Error(errors.New("module requires one or more args"))
+		return
+	}
+	f, ok := mtab[s.words[0]]
+	if !ok {
+		Error(errors.New(s.words[0] + ": module not found"))
+		return
+	}
+	v, err := f(s.words[1:])
+	if err != nil {
+		Error(err)
+		return
+	}
+
+	s1 := cmd.currentStack()
+	s1.words = append(s1.words, v...)
 }

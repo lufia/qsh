@@ -106,6 +106,17 @@ EXIT:
 
 END:
 	op:pipewait
+
+Load statement:
+	op:mark
+	op:word("module")
+	op:load
+
+Module execution statement:
+	op:mark
+	op:word("hello")
+	op:word("arg")
+	op:module
 */
 
 type Code struct {
@@ -243,6 +254,10 @@ func walk(c *Code, p *ast.Node) error {
 		c.emit(Mark)
 		walk(c, p.Left)
 		c.emit(Load)
+	case ast.MODULE:
+		c.emit(Mark)
+		walk(c, p.Left)
+		c.emit(Module)
 	}
 	return nil
 }
