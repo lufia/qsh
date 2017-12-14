@@ -81,6 +81,9 @@ echo hello >>out
 
 # input
 echo hello <in
+
+# pipe
+echo hello | wc
 ```
 
 ## TODO
