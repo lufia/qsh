@@ -229,7 +229,16 @@ func walk(c *Code, p *ast.Node) error {
 		g := Goto(c.Pos())
 		op.Set(g.Jump)
 	case ast.PIPE:
-		// TODO(lufia)
+		c.emit(Pipe)
+		parent := c.alloc()
+		end := c.alloc()
+		walk(c, p.Left)
+		c.emit(Exit)
+		parent.Set(Goto(c.Pos()).Jump)
+		walk(c, p.Right)
+		c.emit(Return)
+		end.Set(Goto(c.Pos()).Jump)
+		c.emit(Wait)
 	}
 	return nil
 }

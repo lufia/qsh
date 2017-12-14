@@ -101,7 +101,7 @@ echo hello <in
 	- [x] write
 	- [x] append
 	- [ ] error
-	- [ ] pipe
+	- [x] pipe
 	- [ ] dup
 - [ ] Statements
 	- [x] if

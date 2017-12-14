@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 )
 
 var (
@@ -111,11 +112,15 @@ func Start(code *Code) {
 		code:  code,
 		ret:   runq,
 	}
-	for runq != nil && runq.pc < len(runq.code.steps) {
-		runq.pc++
-		code.steps[runq.pc-1](runq)
+	start(runq)
+	runq = runq.ret
+}
+
+func start(cmd *Cmd) {
+	for cmd != nil && cmd.pc < len(cmd.code.steps) {
+		cmd.pc++
+		cmd.code.steps[cmd.pc-1](cmd)
 	}
-	Return()
 }
 
 type Goto int
@@ -124,8 +129,8 @@ func (g Goto) Jump(cmd *Cmd) {
 	cmd.pc = int(g)
 }
 
-func Return() {
-	runq = runq.ret
+func Return(cmd *Cmd) {
+	RevertRedir(cmd)
 }
 
 func Error(err error) {
@@ -318,4 +323,35 @@ func ContinueUnless(cmd *Cmd) {
 	if !isSuccess() {
 		cmd.pc++
 	}
+}
+
+func Pipe(cmd *Cmd) {
+	pr, pw := io.Pipe()
+	redir := Redir{
+		stdout: pw,
+		next:   cmd.redir,
+	}
+	cmd1 := Cmd{
+		redir: &redir,
+		code:  cmd.code,
+		pc:    cmd.pc + 2,
+		ret:   cmd,
+	}
+	go func() {
+		start(&cmd1)
+		panic("cannot reach here")
+	}()
+
+	cmd.redir = &Redir{
+		stdin: pr,
+		next:  cmd.redir,
+	}
+}
+
+func Wait(cmd *Cmd) {
+}
+
+func Exit(cmd *Cmd) {
+	RevertRedir(cmd)
+	runtime.Goexit()
 }
