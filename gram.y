@@ -2,6 +2,7 @@
 %term WORD REDIR
 %left IF FOR
 %left ANDAND OROR
+%left '|'
 %{
 package main
 
@@ -89,6 +90,10 @@ cmd:
 |	cmd OROR cmd
 	{
 		$$ = ast.New(ast.OROR, $1, $3)
+	}
+|	cmd '|' cmd
+	{
+		$$ = ast.New(ast.PIPE, $1, $3)
 	}
 |	assign
 

@@ -44,12 +44,12 @@ If statement:
 	op:word("ls")
 	op:simple
 	op:if
-	op:goto(&END)
+	op:goto(END)
 	op:mark
 	op:word("pwd")
 	op:simple
 	op:wasTrue
-	op:END
+END:
 
 For statement:
 	op:mark
@@ -58,33 +58,54 @@ For statement:
 	op:mark
 	op:word("i")
 	op:for
-	op:goto(&END)
+	op:goto(END)
 	op:word("ls")
 	op:simple
 	op:jump(&for)
-	op:END
+END:
 
 And operator:
 	op:mark
 	op:word("a")
 	op:simple
 	op:true
-	op:goto(&END)
+	op:goto(END)
 	op:mark
 	op:word("b")
 	op:simple
-	op:END
+END:
 
 Or operator:
 	op:mark
 	op:word("a")
 	op:simple
 	op:false
-	op:goto(&END)
+	op:goto(END)
 	op:mark
 	op:word("b")
 	op:simple
-	op:END
+END:
+
+Pipe operator:
+	op:pipe
+	op:int(fd0)
+	op:int(fd1)
+	op:goto(EXIT)
+	op:goto(END)
+
+	op:mark
+	op:word("ls")
+	op:simple
+	op:exit
+
+EXIT:
+	op:mark
+	op:work("wc")
+	op:simple
+	op:return
+
+END:
+	op:pipewait
 */
 
 type Code struct {
@@ -207,6 +228,17 @@ func walk(c *Code, p *ast.Node) error {
 		walk(c, p.Right)
 		g := Goto(c.Pos())
 		op.Set(g.Jump)
+	case ast.PIPE:
+		c.emit(Pipe)
+		parent := c.alloc()
+		end := c.alloc()
+		walk(c, p.Left)
+		c.emit(Exit)
+		parent.Set(Goto(c.Pos()).Jump)
+		walk(c, p.Right)
+		c.emit(Return)
+		end.Set(Goto(c.Pos()).Jump)
+		c.emit(Wait)
 	}
 	return nil
 }

@@ -20,6 +20,7 @@ const (
 	FOR
 	ANDAND
 	OROR
+	PIPE
 )
 
 const (
