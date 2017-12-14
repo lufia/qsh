@@ -21,6 +21,7 @@ const (
 	ANDAND
 	OROR
 	PIPE
+	LOAD
 )
 
 const (
@@ -100,4 +101,8 @@ func Redirect(p1, p2 *Node) *Node {
 	}
 	p1.Left = p2
 	return p1
+}
+
+func Load(p *Node) *Node {
+	return New(LOAD, p, nil)
 }

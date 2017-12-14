@@ -14,9 +14,10 @@ const (
 )
 
 var keywords = map[string]int{
-	"if":  IF,
-	"for": FOR,
-	"in":  IN,
+	"if":   IF,
+	"for":  FOR,
+	"in":   IN,
+	"load": LOAD,
 }
 
 type Lexer struct {

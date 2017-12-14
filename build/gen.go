@@ -239,6 +239,10 @@ func walk(c *Code, p *ast.Node) error {
 		c.emit(Return)
 		end.Set(Goto(c.Pos()).Jump)
 		c.emit(Wait)
+	case ast.LOAD:
+		c.emit(Mark)
+		walk(c, p.Left)
+		c.emit(Load)
 	}
 	return nil
 }

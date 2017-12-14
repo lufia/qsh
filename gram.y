@@ -1,6 +1,6 @@
 %term IF FOR IN
 %term WORD REDIR
-%left IF FOR
+%left IF FOR LOAD
 %left ANDAND OROR
 %left '|'
 %{
@@ -78,6 +78,10 @@ cmd:
 	{
 		p := ast.New(ast.LIST, $2, $4)
 		$$ = ast.New(ast.FOR, p, $5)
+	}
+|	LOAD word
+	{
+		$$ = ast.Load($2)
 	}
 |	simple
 	{
