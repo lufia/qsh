@@ -12,30 +12,9 @@ import (
 )
 
 var (
-	vtab = make(map[string][]string)
 	mtab = make(map[string]func([]string) ([]string, error))
 	runq *Cmd
 )
-
-func lastStatus() string {
-	v, ok := vtab["status"]
-	if !ok || len(v) != 1 {
-		return ""
-	}
-	return v[0]
-}
-
-func isSuccess() bool {
-	return lastStatus() == ""
-}
-
-func updateStatus(err error) {
-	if err == nil {
-		delete(vtab, "status")
-	} else {
-		vtab["status"] = []string{err.Error()}
-	}
-}
 
 type file struct {
 	io.ReadWriteCloser
@@ -242,7 +221,8 @@ func Simple(cmd *Cmd) {
 }
 
 func resolvePath(p string) (string, error) {
-	for _, dir := range vtab["PATH"] {
+	paths, _ := LookupVar("PATH")
+	for _, dir := range paths {
 		f := filepath.Join(dir, p)
 		info, err := os.Stat(f)
 		if err != nil {
@@ -262,7 +242,7 @@ func Var(cmd *Cmd) {
 		Error(errors.New("variable name is not singleton"))
 		return
 	}
-	v := vtab[s.words[0]]
+	v, _ := LookupVar(s.words[0])
 	s1 := cmd.currentStack()
 	s1.words = append(s1.words, v...)
 }
@@ -277,9 +257,9 @@ func Assign(cmd *Cmd) {
 
 	s = cmd.popStack()
 	if len(s.words) == 0 {
-		delete(vtab, name)
+		UnsetVar(name)
 	} else {
-		vtab[name] = s.words
+		UpdateVar(name, s.words)
 	}
 }
 
@@ -303,7 +283,7 @@ func For(cmd *Cmd) {
 	}
 
 	name := s.words[0]
-	vtab[name] = []string{p.words[0]}
+	UpdateVar(name, []string{p.words[0]})
 	p.words = p.words[1:]
 	cmd.pc++ // skip goto op
 }

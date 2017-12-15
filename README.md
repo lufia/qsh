@@ -28,6 +28,14 @@ echo $a
 # 1 2
 ```
 
+if variable name all are capital letter, it handles as environment variables.
+
+```
+RESULT_CODE=1
+bash -c 'echo $RESULT_CODE'
+# Output: 1
+```
+
 Indirect reference
 
 ```

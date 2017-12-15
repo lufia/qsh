@@ -7,6 +7,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
+
+	"github.com/lufia/qsh/build"
 )
 
 var (
@@ -16,6 +19,17 @@ var (
 func usage() {
 	fmt.Fprintf(os.Stderr, "usage: qsh [-d] [file [arg ...]]\n")
 	os.Exit(2)
+}
+
+func init() {
+	a := os.Environ()
+	for _, s := range a {
+		kv := strings.SplitN(s, "=", 2)
+		if len(kv) != 2 {
+			continue
+		}
+		build.ImportVar(kv[0])
+	}
 }
 
 func main() {
