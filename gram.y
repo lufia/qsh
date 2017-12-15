@@ -24,7 +24,9 @@ stmt:
 	}
 |	line '\n'
 	{
-		ast.Dump($1)
+		if *flagDebug {
+			ast.Dump($1)
+		}
 		build.Compile($1)
 		return 0
 	}

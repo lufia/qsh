@@ -497,134 +497,136 @@ yydefault:
 		yyDollar = yyS[yypt-2 : yypt+1]
 		//line gram.y:26
 		{
-			ast.Dump(yyDollar[1].tree)
+			if *flagDebug {
+				ast.Dump(yyDollar[1].tree)
+			}
 			build.Compile(yyDollar[1].tree)
 			return 0
 		}
 	case 4:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:35
+		//line gram.y:37
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 6:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:42
+		//line gram.y:44
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 8:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:49
+		//line gram.y:51
 		{
 			yyVAL.tree = ast.Async(yyDollar[1].tree)
 		}
 	case 11:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:59
+		//line gram.y:61
 		{
 			yyVAL.tree = ast.Block(yyDollar[2].tree)
 		}
 	case 12:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:65
+		//line gram.y:67
 		{
 			yyVAL.tree = ast.Assign(yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 13:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:70
+		//line gram.y:72
 		{
 			yyVAL.tree = nil
 		}
 	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:74
+		//line gram.y:76
 		{
 			yyVAL.tree = ast.New(ast.IF, yyDollar[2].tree, yyDollar[3].tree)
 		}
 	case 15:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line gram.y:78
+		//line gram.y:80
 		{
 			p := ast.New(ast.LIST, yyDollar[2].tree, yyDollar[4].tree)
 			yyVAL.tree = ast.New(ast.FOR, p, yyDollar[5].tree)
 		}
 	case 16:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:83
+		//line gram.y:85
 		{
 			yyVAL.tree = ast.Load(yyDollar[2].tree)
 		}
 	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line gram.y:87
+		//line gram.y:89
 		{
 			yyVAL.tree = ast.Simple(yyDollar[1].tree)
 		}
 	case 18:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:91
+		//line gram.y:93
 		{
 			yyVAL.tree = ast.New(ast.ANDAND, yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 19:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:95
+		//line gram.y:97
 		{
 			yyVAL.tree = ast.New(ast.OROR, yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 20:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:99
+		//line gram.y:101
 		{
 			yyVAL.tree = ast.New(ast.PIPE, yyDollar[1].tree, yyDollar[3].tree)
 		}
 	case 23:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:107
+		//line gram.y:109
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 24:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:111
+		//line gram.y:113
 		{
 			yyVAL.tree = ast.New(ast.LIST, yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 25:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:117
+		//line gram.y:119
 		{
 			yyVAL.tree = ast.Redirect(yyDollar[1].tree, yyDollar[2].tree)
 		}
 	case 28:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:129
+		//line gram.y:131
 		{
 			yyVAL.tree = ast.Var(yyDollar[2].tree)
 		}
 	case 29:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line gram.y:133
+		//line gram.y:135
 		{
 			yyVAL.tree = ast.Tuple(yyDollar[2].tree)
 		}
 	case 30:
 		yyDollar = yyS[yypt-4 : yypt+1]
-		//line gram.y:137
+		//line gram.y:139
 		{
 			yyVAL.tree = ast.Module(yyDollar[3].tree)
 		}
 	case 32:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line gram.y:143
+		//line gram.y:145
 		{
 			yyVAL.tree = nil
 		}
 	case 33:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line gram.y:147
+		//line gram.y:149
 		{
 			if yyDollar[1].tree == nil {
 				yyVAL.tree = yyDollar[2].tree

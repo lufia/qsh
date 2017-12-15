@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -12,14 +13,17 @@ var (
 	flagDebug = flag.Bool("d", false, "debug")
 )
 
+func usage() {
+	fmt.Fprintf(os.Stderr, "usage: qsh [-d] [file [arg ...]]\n")
+	os.Exit(2)
+}
+
 func main() {
-	flag.Parse()
 	log.SetFlags(0)
 	log.SetPrefix("qsh: ")
+	flag.Usage = usage
+	flag.Parse()
 
-	if *flagDebug {
-		yyDebug = 2
-	}
 	if flag.NArg() == 0 {
 		Run(os.Stdin, "<stdin>", nil)
 	} else {
