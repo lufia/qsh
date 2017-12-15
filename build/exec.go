@@ -103,8 +103,10 @@ func (cmd *Cmd) currentStack() *Stack {
 	return cmd.stack[len(cmd.stack)-1]
 }
 
-func (cmd *Cmd) popStack() {
+func (cmd *Cmd) popStack() *Stack {
+	s := cmd.currentStack()
 	cmd.stack = cmd.stack[0 : len(cmd.stack)-1]
+	return s
 }
 
 func Start(code *Code) {
@@ -146,12 +148,11 @@ func (s String) Push(cmd *Cmd) {
 }
 
 func SetStdin(cmd *Cmd) {
-	s := cmd.currentStack()
+	s := cmd.popStack()
 	if len(s.words) != 1 {
 		Error(errors.New("< requires singleton"))
 		return
 	}
-	cmd.popStack()
 
 	f, err := openFile(s.words[0], os.O_RDONLY, 0)
 	if err != nil {
@@ -166,12 +167,11 @@ func SetStdin(cmd *Cmd) {
 }
 
 func SetStdout(cmd *Cmd) {
-	s := cmd.currentStack()
+	s := cmd.popStack()
 	if len(s.words) != 1 {
 		Error(errors.New("> requires singleton"))
 		return
 	}
-	cmd.popStack()
 
 	f, err := openFile(s.words[0], os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
@@ -186,12 +186,11 @@ func SetStdout(cmd *Cmd) {
 }
 
 func SetStdoutAppend(cmd *Cmd) {
-	s := cmd.currentStack()
+	s := cmd.popStack()
 	if len(s.words) != 1 {
 		Error(errors.New(">> requires singleton"))
 		return
 	}
-	cmd.popStack()
 
 	f, err := openFile(s.words[0], os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
 	if err != nil {
@@ -220,9 +219,7 @@ func RevertRedir(cmd *Cmd) {
 }
 
 func Simple(cmd *Cmd) {
-	defer cmd.popStack()
-
-	s := cmd.currentStack()
+	s := cmd.popStack()
 	p := s.words[0]
 	if !filepath.IsAbs(p) {
 		var err error
@@ -260,33 +257,30 @@ func resolvePath(p string) (string, error) {
 }
 
 func Var(cmd *Cmd) {
-	s := cmd.currentStack()
+	s := cmd.popStack()
 	if len(s.words) != 1 {
 		Error(errors.New("variable name is not singleton"))
 		return
 	}
 	v := vtab[s.words[0]]
-	cmd.popStack()
 	s1 := cmd.currentStack()
 	s1.words = append(s1.words, v...)
 }
 
 func Assign(cmd *Cmd) {
-	s := cmd.currentStack()
+	s := cmd.popStack()
 	if len(s.words) != 1 {
 		Error(errors.New("variable name is not singleton"))
 		return
 	}
-	cmd.popStack()
 	name := s.words[0]
 
-	s = cmd.currentStack()
+	s = cmd.popStack()
 	if len(s.words) == 0 {
 		delete(vtab, name)
 	} else {
 		vtab[name] = s.words
 	}
-	cmd.popStack()
 }
 
 func If(cmd *Cmd) {
@@ -370,8 +364,7 @@ func Load(cmd *Cmd) {
 }
 
 func Module(cmd *Cmd) {
-	s := cmd.currentStack()
-	cmd.popStack()
+	s := cmd.popStack()
 	if len(s.words) == 0 {
 		Error(errors.New("module requires one or more args"))
 		return
