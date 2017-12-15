@@ -72,24 +72,34 @@ for i in 1 2 3 {
 
 ### Modules
 
+first, write your code in Go.
+
 ```
-ackage main
+package main
 
 var SampleModule = map[string]string{
 	"hello": "Hello",
 }
 
 func Hello(args []string) ([]string, error) {
-	return []string{"hello"}, nil
+	a := make([]string, 0, len(args)+1)
+	a = append(a, "hello")
+	return append(a, args...), nil
 }
 ```
 
-shell
+build it as plugin.
 
 ```
-load sample
+go build -buildmode=plugin sample.go
+```
 
-echo ${hello a b c}
+then load with load stamtement.
+
+```
+load sample # plugin filepath without .so
+echo ${hello a ${hello b}}
+# Output: hello a hello b
 ```
 
 ### Expression
@@ -128,7 +138,7 @@ echo hello | wc
 	- [x] assign
 	- [ ] indexing
 	- [ ] concat
-	- [ ] environment
+	- [x] environment
 - [ ] Redirection
 	- [x] read
 	- [x] write
@@ -141,7 +151,7 @@ echo hello | wc
 	- [ ] if-else
 	- [x] for
 	- [ ] switch
-	- [ ] load
+	- [x] load
 - [x] Expression
 	- [x] `&&`
 	- [x] `||`
