@@ -4,6 +4,16 @@ package ast
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[READ-0]
+	_ = x[WRITE-1]
+	_ = x[APPEND-2]
+	_ = x[HERE-3]
+}
+
 const _Direction_name = "READWRITEAPPENDHERE"
 
 var _Direction_index = [...]uint8{0, 4, 9, 15, 19}

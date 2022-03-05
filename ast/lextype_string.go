@@ -4,6 +4,28 @@ package ast
 
 import "strconv"
 
+func _() {
+	// An "invalid array index" compiler error signifies that the constant values have changed.
+	// Re-run the stringer command to generate them again.
+	var x [1]struct{}
+	_ = x[WORD-0]
+	_ = x[REDIR-1]
+	_ = x[SIMPLE-2]
+	_ = x[LIST-3]
+	_ = x[BLOCK-4]
+	_ = x[ASYNC-5]
+	_ = x[VAR-6]
+	_ = x[TUPLE-7]
+	_ = x[ASSIGN-8]
+	_ = x[IF-9]
+	_ = x[FOR-10]
+	_ = x[ANDAND-11]
+	_ = x[OROR-12]
+	_ = x[PIPE-13]
+	_ = x[LOAD-14]
+	_ = x[MODULE-15]
+}
+
 const _LexType_name = "WORDREDIRSIMPLELISTBLOCKASYNCVARTUPLEASSIGNIFFORANDANDORORPIPELOADMODULE"
 
 var _LexType_index = [...]uint8{0, 4, 9, 15, 19, 24, 29, 32, 37, 43, 45, 48, 54, 58, 62, 66, 72}
