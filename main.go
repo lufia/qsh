@@ -1,5 +1,7 @@
 package main
 
+//go:generate goyacc gram.y
+
 import (
 	"bufio"
 	"flag"
