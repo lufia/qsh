@@ -1,6 +1,6 @@
 package main
 
-//go:generate goyacc gram.y
+//go:generate goyacc -l gram.y
 
 import (
 	"bufio"
