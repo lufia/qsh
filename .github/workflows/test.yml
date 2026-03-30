@@ -7,4 +7,4 @@ on:
   pull_request:
 jobs:
   test:
-    uses: lufia/workflows/.github/workflows/go-test.yml@862187051b3e08cb09915314465eeec8cfefe569 # v0.9.0
+    uses: lufia/workflows/.github/workflows/go-test.yml@bfc84184198b340bf1c34b2c695c2810a8e0897e # v0.11.1
